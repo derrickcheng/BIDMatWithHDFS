@@ -1,0 +1,16 @@
+target/
+project/
+#sbt
+/project/target/
+/project/project/target
+
+# eclipse, intellij
+/.classpath
+/.project
+/src/intellij/*.iml
+/src/intellij/*.ipr
+/src/intellij/*.iws
+/.cache
+/.idea
+/.settings
+.DS_Store
