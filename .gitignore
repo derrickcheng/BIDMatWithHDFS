@@ -14,3 +14,6 @@ project/
 /.idea
 /.settings
 .DS_Store
+
+#project specific
+BIDMatWithHDFSStart
