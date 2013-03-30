@@ -8,7 +8,7 @@ import BIDMat.MatFunctions._
 import BIDMat.Plotting._
 import BIDMat.SciFunctions._
 import BIDMat.Solvers._
-import BIDMat.SMat
+import BIDMat.{SMat,FMat,IMat,BMat}
 import BIDMat.SparseMat
 import BIDMat.DenseMat
 
@@ -18,21 +18,29 @@ object TestMatIO {
     Mat.noMKL=true;
 	testFMat();
 	testSMat();
+	testIMat();
   }
   
    def testSMat()
   {
 //    var inputMat = sprand(10,15,0.5)
-    var inputMat = sparse(rand(10,15,0.5))
+    var inputMat : SMat = sparse(rand(10,15,0.5))
     var matIO : MatIO = new MatIO();
     matIO.mat = inputMat;
     testMat(matIO, inputMat);
   }
   
+  def testIMat()
+  {
+    var inputMat :IMat = 1\2\3 on  4\5\6 on 7\8\9
+    var matIO : MatIO = new MatIO();
+    matIO.mat = inputMat;
+    testMat(matIO,inputMat);
+  }
   
   def testFMat()
   {
-    var inputMat = rand(10,15);
+    var inputMat :FMat = rand(10,15);
     var matIO : MatIO = new MatIO();
     matIO.mat = inputMat;
     testMat(matIO,inputMat);
@@ -55,6 +63,7 @@ object TestMatIO {
         var iM = inputMat match
         {
         	case fMat : FMat => fMat;
+        	case iMat : IMat => iMat;
         }
         assert(dM.nrows.equals(iM.nrows))
         assert(dM.ncols.equals(iM.ncols))

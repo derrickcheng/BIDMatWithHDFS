@@ -2,7 +2,7 @@ import org.apache.hadoop.io.Writable
 import java.io.IOException
 import java.io.DataOutput
 import java.io.DataInput
-import BIDMat.{Mat,FMat,SMat,DenseMat,SparseMat}
+import BIDMat.{Mat,FMat,IMat,SMat,BMat,DenseMat,SparseMat}
 import MatType._
 
 class MatIO extends Writable{
@@ -20,7 +20,9 @@ class MatIO extends Writable{
   override def write(out: DataOutput):Unit = {
     contents match {
       case fM : FMat => writeDenseMat(fM, MatType.FMAT, (v:Float)=>out.writeFloat(v) ,out)
+      case iM : IMat => writeDenseMat(iM, MatType.IMAT, (v:Int)=>out.writeInt(v) ,out)
       case sM : SMat => writeSparseMat(sM, MatType.SMAT,(v:Float)=>out.writeFloat(v) , out)
+      case bM : BMat => writeSparseMat(bM, MatType.BMAT,(v:Byte)=>out.writeByte(v) , out)
     }
   }
   
@@ -28,8 +30,10 @@ class MatIO extends Writable{
     val matType : Int = in.readInt();
     matType match {
       case MatType.FMAT => readDenseMat( (nr: Int, nc:Int, data0:Array[Float])=>FMat(nr,nc,data0), ()=>in.readFloat() , in)
+      case MatType.IMAT => readDenseMat( (nr: Int, nc:Int, data0:Array[Int])=>IMat(nr,nc,data0), ()=>in.readInt() , in)
       case MatType.SMAT => readSparseMat( (nr: Int, nc: Int, nnz: Int, ir : Array[Int], jc : Array[Int], data : Array[Float])=>SMat(nr, nc, nnz, ir, jc, data), ()=>in.readFloat(), in)
-      
+      case MatType.BMAT => readSparseMat( (nr: Int, nc: Int, nnz: Int, ir : Array[Int], jc : Array[Int], data : Array[Byte])=>BMat(nr, nc, nnz, ir, jc, data), ()=>in.readByte(), in)
+
     }
   }
   
